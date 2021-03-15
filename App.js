@@ -1,13 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { Provider, connect } from 'react-redux';
+import { createStore } from 'redux';
+import friendsReducer from './FriendsReducer';
 
-export default function App() {
+const store = createStore(friendsReducer);
+
+
+export function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+
+      <View style={styles.container}>
+        <Text>You have { this.props.friends.current.length } </Text>
+        <StatusBar style="auto" />
+      </View>
+    </Provider>
   );
 }
 
@@ -19,3 +28,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const mapStateToProps = (state) => {
+  const { friends } = state
+  return { friends }
+};
+
+export default connect(mapStateToProps)(App);
