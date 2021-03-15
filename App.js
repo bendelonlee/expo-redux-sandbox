@@ -1,22 +1,47 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TextComponent, View } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import friendsReducer from './FriendsReducer';
 
 const store = createStore(friendsReducer);
 
-
-export function App() {
+function MiddleComponent(props){
   return (
-    <Provider store={store}>
+    <>
+    {props.children}
+    </>
+  )
+}
 
-      <View style={styles.container}>
-        <Text>You have { this.props.friends.current.length } </Text>
-        <StatusBar style="auto" />
-      </View>
-    </Provider>
+function FriendCount(props){
+  return <Text>You have { props.friends.current.length } friends </Text>
+}
+
+const mapStateToProps = (state) => {
+  const { friends } = state
+  return { friends }
+};
+
+const ConnectedFriendCount = connect(mapStateToProps)(FriendCount);
+
+
+function App(props) {
+  return (
+    <View style={styles.container}>
+      <MiddleComponent>
+        <MiddleComponent>
+          <MiddleComponent>
+            <MiddleComponent>
+              <MiddleComponent>
+                <ConnectedFriendCount/>
+              </MiddleComponent>
+            </MiddleComponent>
+          </MiddleComponent>
+        </MiddleComponent>
+      </MiddleComponent>
+    </View>
   );
 }
 
@@ -29,9 +54,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  const { friends } = state
-  return { friends }
-};
 
-export default connect(mapStateToProps)(App);
+
+export default function WrappedApp(){
+  return (
+    <Provider store={store}>
+      <App/>
+    </Provider>
+  )
+}
